@@ -30,11 +30,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kermit)
-            
-            // Standardizing supporting library usage at domain level
-            api("com.abyxcz.viewpoint.notification:notification-lib:1.0.0")
-            api("com.abyxcz.viewpoint.storage:storage-lib:1.0.2")
         }
     }
 }

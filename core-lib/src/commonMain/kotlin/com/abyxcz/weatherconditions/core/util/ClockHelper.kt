@@ -1,8 +1,9 @@
 package com.abyxcz.weatherconditions.core.util
 
-import kotlinx.datetime.Clock
+import com.abyxcz.weatherconditions.core.ports.outbound.Clock
 import kotlinx.datetime.Instant
 
-object ClockHelper {
-    fun now(): Instant = Clock.System.now()
+@OptIn(kotlin.time.ExperimentalTime::class)
+class ClockHelper(private val clock: Clock) {
+    fun now(): Instant = clock.now()
 }

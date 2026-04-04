@@ -6,6 +6,7 @@ import com.abyxcz.weatherconditions.core.ports.outbound.VenueRepository
 import com.abyxcz.weatherconditions.core.domain.usecase.PlayabilityCalculator
 import com.abyxcz.weatherconditions.core.ports.outbound.ForecastService
 import com.abyxcz.weatherconditions.core.domain.model.WeatherPeriod
+import com.abyxcz.weatherconditions.core.ports.outbound.Logger
 import kotlinx.coroutines.flow.first
 
 class WeatherAlertManager(
@@ -14,6 +15,7 @@ class WeatherAlertManager(
     private val playabilityCalculator: PlayabilityCalculator,
     private val settingsRepository: SettingsRepository,
     private val notificationService: NotificationService,
+    private val logger: Logger,
 ) {
     suspend fun checkWeatherAndNotify() {
         val venues = venueRepository.getVenues()
@@ -45,8 +47,7 @@ class WeatherAlertManager(
                     )
                 }
             } catch (e: Exception) {
-                // In a real app, use Kermit for logging
-                println("Failed to check weather for ${venue.title}: ${e.message}")
+                logger.e("WeatherAlertManager", "Failed to check weather for ${venue.title}", e)
             }
         }
     }

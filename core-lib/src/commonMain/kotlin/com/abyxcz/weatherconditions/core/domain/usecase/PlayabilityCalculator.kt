@@ -1,4 +1,4 @@
-package com.abyxcz.weatherconditions.core.domain.model
+package com.abyxcz.weatherconditions.core.domain.usecase
 
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilityProfile
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilitySettings
