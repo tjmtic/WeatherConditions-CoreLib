@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
+            implementation("com.abyxcz.viewpoint.location:location-lib:1.0.0")
         }
     }
 }
