@@ -144,6 +144,10 @@ class VenuePresenter(
         _state.update { it.copy(isMapMode = !it.isMapMode) }
     }
 
+    fun onVenueFocused(venue: Venue?) {
+        _state.update { it.copy(focusedVenue = venue) }
+    }
+
     fun onCoordinateSelected(lat: Double, lon: Double) {
         scope.launch {
             try {

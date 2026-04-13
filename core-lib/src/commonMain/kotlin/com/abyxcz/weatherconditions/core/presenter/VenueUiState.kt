@@ -20,6 +20,7 @@ data class VenueUiState(
     val currentLocation: Coordinate? = null,
     val isMapMode: Boolean = false,
     val reverseGeocodedAddress: String? = null,
+    val focusedVenue: Venue? = null,
 )
 
 enum class SortOption {
