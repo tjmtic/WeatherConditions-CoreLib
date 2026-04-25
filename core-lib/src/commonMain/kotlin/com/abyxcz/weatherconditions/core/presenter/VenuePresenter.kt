@@ -10,7 +10,7 @@ import com.abyxcz.weatherconditions.core.ports.outbound.ForecastService
 import com.abyxcz.weatherconditions.core.ports.outbound.LocationService
 import com.abyxcz.weatherconditions.core.ports.outbound.Logger
 import com.abyxcz.weatherconditions.core.ports.outbound.SettingsRepository
-import com.abyxcz.viewpoint.location.ReverseGeocodingService
+import com.abyxcz.weatherconditions.core.ports.outbound.ReverseGeocodingService
 import com.abyxcz.weatherconditions.core.ports.outbound.VenueRepository
 import com.abyxcz.weatherconditions.core.util.ClockHelper
 import kotlinx.coroutines.CoroutineScope

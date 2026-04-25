@@ -1,6 +1,5 @@
 package com.abyxcz.weatherconditions.core.presenter
 
-import com.abyxcz.weatherconditions.core.adapter.KmpClockAdapter
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilityProfile
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilitySettings
 import com.abyxcz.weatherconditions.core.domain.model.Venue
@@ -35,6 +34,7 @@ class VenuePresenterTest {
     private lateinit var forecastService: FakeForecastService
     private lateinit var settingsRepository: FakeSettingsRepository
     private lateinit var locationService: FakeLocationService
+    private lateinit var reverseGeocodingService: FakeReverseGeocodingService
     private lateinit var playabilityCalculator: PlayabilityCalculator
     private lateinit var presenter: VenuePresenter
 
@@ -45,6 +45,7 @@ class VenuePresenterTest {
         forecastService = FakeForecastService()
         settingsRepository = FakeSettingsRepository()
         locationService = FakeLocationService()
+        reverseGeocodingService = FakeReverseGeocodingService()
         playabilityCalculator = PlayabilityCalculator()
         presenter =
             VenuePresenter(
@@ -53,8 +54,9 @@ class VenuePresenterTest {
                 playabilityCalculator = playabilityCalculator,
                 settingsRepository = settingsRepository,
                 locationService = locationService,
+                reverseGeocodingService = reverseGeocodingService,
                 logger = FakeLogger(),
-                clockHelper = ClockHelper(KmpClockAdapter()),
+                clockHelper = ClockHelper(FakeClock()),
                 scope = testScope,
             )
     }
@@ -326,4 +328,17 @@ class FakeLocationService : LocationService {
     fun setLocation(coordinate: Coordinate?) {
         _currentLocation.value = coordinate
     }
+}
+
+class FakeReverseGeocodingService : ReverseGeocodingService {
+    var address: String? = "Test Address"
+    override suspend fun getAddress(
+        lat: Double,
+        lon: Double,
+    ): String? = address
+}
+
+class FakeClock : Clock {
+    var currentTime = kotlinx.datetime.Instant.fromEpochMilliseconds(0)
+    override fun now(): kotlinx.datetime.Instant = currentTime
 }

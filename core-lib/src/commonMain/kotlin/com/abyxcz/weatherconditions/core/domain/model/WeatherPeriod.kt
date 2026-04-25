@@ -20,6 +20,7 @@ data class WeatherPeriod(
     val temperatureTrend: String? = null,
     val probabilityOfPrecipitation: WeatherValue? = null,
     val relativeHumidity: WeatherValue? = null,
+    val precipitationAmount: WeatherValue? = null,
     val windSpeed: String = "",
     val windDirection: String = "",
     val icon: String = "",

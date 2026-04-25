@@ -72,7 +72,30 @@ class PlayabilityCalculator {
             }
         }
 
-        return (temperatureScore + precipitationScore + windSpeedScore + conditionScore + patternModifier)
+        // --- Look-back Logic: Overnight impact ---
+        var lookbackPenalty = 0
+        if (period.isDaytime && index > 0) {
+            val previousPeriod = periods[index - 1]
+            val prevPrecipProb = previousPeriod.probabilityOfPrecipitation?.value ?: 0.0
+            val prevPrecipAmount = previousPeriod.precipitationAmount?.value ?: 0.0
+            
+            // If we have precise amount, use it as priority
+            if (prevPrecipAmount > 0.5) {
+                lookbackPenalty -= 15 // Heavy penalty for heavy rain amount
+            } else if (prevPrecipAmount > 0.1) {
+                lookbackPenalty -= 7 // Moderate penalty
+            } else if (prevPrecipProb > 50.0 ||
+                previousPeriod.shortForecast.contains("Rain", ignoreCase = true) ||
+                previousPeriod.shortForecast.contains("Storm", ignoreCase = true)
+            ) {
+                // Fallback to probability and forecast text
+                lookbackPenalty -= 10
+            } else if (prevPrecipProb > 20.0 || previousPeriod.shortForecast.contains("Showers", ignoreCase = true)) {
+                lookbackPenalty -= 5
+            }
+        }
+
+        return (temperatureScore + precipitationScore + windSpeedScore + conditionScore + patternModifier + lookbackPenalty)
             .coerceAtLeast(0)
     }
 
