@@ -33,9 +33,9 @@ class WeatherAlertManager(
 
                 val highScores = mutableListOf<Int>()
                 periods.take(4).forEach { period: WeatherPeriod ->
-                    val score = playabilityCalculator.calculateScore(period, settings, venue.settings)
-                    if (score >= threshold) {
-                        highScores.add(score)
+                    val breakdown = playabilityCalculator.calculateScore(period, settings, venue.settings)
+                    if (breakdown.totalScore >= threshold) {
+                        highScores.add(breakdown.totalScore)
                     }
                 }
 

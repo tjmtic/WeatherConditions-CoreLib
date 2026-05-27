@@ -1,6 +1,6 @@
 package com.abyxcz.weatherconditions.core.presenter
 
-import com.abyxcz.viewpoint.location.Coordinate
+import com.abyxcz.weatherconditions.core.domain.model.Coordinate
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilityProfile
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilitySettings
 import com.abyxcz.weatherconditions.core.domain.model.Venue
@@ -104,15 +104,20 @@ class VenuePresenter(
                 val scoredForecast = applyScoresToForecast(venue, forecast)
 
                 _state.update { s ->
+                    val updatedVenues = s.venues.map { v ->
+                        if (v.id == venueId) v.copy(forecast = scoredForecast) else v
+                    }
                     s.copy(
-                        venues =
-                            s.venues.map { v ->
-                                if (v.id == venueId) v.copy(forecast = scoredForecast) else v
-                            },
+                        venues = updatedVenues,
                         loadingForecastIds = s.loadingForecastIds - venueId.toString(),
                         forecastsByVenueId = s.forecastsByVenueId + (venueId.toString() to scoredForecast),
                         forecastErrorsByVenueId = s.forecastErrorsByVenueId - venueId.toString(),
                     )
+                }
+
+                // Persist the scored forecast back to the repository
+                _state.value.venues.find { it.id == venueId }?.let { venue ->
+                    venueRepository.updateVenue(venue)
                 }
             } catch (e: Exception) {
                 _state.update { s ->
@@ -228,13 +233,16 @@ class VenuePresenter(
                 val globalProfile = currentSettings.activeProfileId?.let { id -> allProfiles.find { it.id == id } }
                 val selectedProfile = venueProfile ?: globalProfile
 
-                val score =
+                val breakdown =
                     if (selectedProfile != null && periodIndex != -1) {
                         playabilityCalculator.calculateScore(selectedProfile, periods, periodIndex)
                     } else {
                         playabilityCalculator.calculateScore(period, currentSettings, venue.settings)
                     }
-                period.copy(playabilityScore = score)
+                period.copy(
+                    playabilityScore = breakdown.totalScore,
+                    playabilityBreakdown = breakdown
+                )
             } else {
                 null
             }

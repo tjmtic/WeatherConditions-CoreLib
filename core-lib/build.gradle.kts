@@ -24,13 +24,20 @@ kotlin {
     watchosArm32()
     watchosArm64()
     watchosSimulatorArm64()
-    
     sourceSets {
         commonMain.dependencies {
+            implementation(kotlin("stdlib"))
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            implementation("com.abyxcz.viewpoint.location:location-lib:1.0.0")
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.coroutines.test)
+            implementation(libs.kotest.assertions)
+            implementation(libs.kotest.property)
+            implementation(libs.kotest.framework)
+            implementation(libs.kotest.datatest)
         }
     }
 }

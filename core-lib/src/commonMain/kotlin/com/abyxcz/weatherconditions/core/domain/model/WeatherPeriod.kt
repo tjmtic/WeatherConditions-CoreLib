@@ -27,6 +27,7 @@ data class WeatherPeriod(
     val shortForecast: String = "",
     val detailedForecast: String = "",
     val playabilityScore: Int? = null,
+    val playabilityBreakdown: PlayabilityScoreBreakdown? = null,
 ) {
     fun getEffectiveScore(): Int = playabilityScore ?: 0
 }

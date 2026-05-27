@@ -4,6 +4,7 @@ import com.abyxcz.weatherconditions.core.domain.model.PlayabilityProfile
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilitySettings
 import com.abyxcz.weatherconditions.core.domain.model.VenueSettings
 import com.abyxcz.weatherconditions.core.domain.model.WeatherPeriod
+import com.abyxcz.weatherconditions.core.domain.model.PlayabilityScoreBreakdown
 import com.abyxcz.weatherconditions.core.domain.model.extractWindSpeed
 
 class PlayabilityCalculator {
@@ -11,7 +12,7 @@ class PlayabilityCalculator {
         period: WeatherPeriod,
         settings: PlayabilitySettings,
         venueSettings: VenueSettings? = null,
-    ): Int {
+    ): PlayabilityScoreBreakdown {
         val profile =
             PlayabilityProfile(
                 name = "Default",
@@ -27,7 +28,7 @@ class PlayabilityCalculator {
         profile: PlayabilityProfile,
         periods: List<WeatherPeriod>,
         index: Int,
-    ): Int {
+    ): PlayabilityScoreBreakdown {
         val period = periods[index]
 
         val temperatureScore =
@@ -78,7 +79,7 @@ class PlayabilityCalculator {
             val previousPeriod = periods[index - 1]
             val prevPrecipProb = previousPeriod.probabilityOfPrecipitation?.value ?: 0.0
             val prevPrecipAmount = previousPeriod.precipitationAmount?.value ?: 0.0
-            
+
             // If we have precise amount, use it as priority
             if (prevPrecipAmount > 0.5) {
                 lookbackPenalty -= 15 // Heavy penalty for heavy rain amount
@@ -95,8 +96,18 @@ class PlayabilityCalculator {
             }
         }
 
-        return (temperatureScore + precipitationScore + windSpeedScore + conditionScore + patternModifier + lookbackPenalty)
+        val totalScore = (temperatureScore + precipitationScore + windSpeedScore + conditionScore + patternModifier + lookbackPenalty)
             .coerceAtLeast(0)
+
+        return PlayabilityScoreBreakdown(
+            temperatureScore = temperatureScore,
+            precipitationScore = precipitationScore,
+            windSpeedScore = windSpeedScore,
+            conditionScore = conditionScore,
+            patternModifier = patternModifier,
+            lookbackPenalty = lookbackPenalty,
+            totalScore = totalScore
+        )
     }
 
     private fun matchesPattern(

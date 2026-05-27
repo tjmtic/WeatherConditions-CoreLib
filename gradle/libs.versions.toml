@@ -17,7 +17,7 @@ kotlin = "2.1.0"
 kotlinx-coroutines = "1.9.0"
 ktor = "3.0.3"
 kotlinx-json = "1.7.3"
-kotlinx-datetime = "0.7.1"
+kotlinx-datetime = "0.6.1"
 navigationCompose = "2.9.1"
 sqldelight = "2.0.1"
 androidx-work = "2.10.0"
@@ -32,6 +32,7 @@ ktlint = "12.1.2"
 androidx-wear-compose = "1.4.1"
 androidx-wear = "1.0.0"
 androidx-core-splashscreen = "1.0.1"
+kotest = "5.9.1"
 [libraries]
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
@@ -85,6 +86,12 @@ wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation",
 wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear-compose" }
 wear-tooling-preview = { module = "androidx.wear:wear-tooling-preview", version.ref = "androidx-wear" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-core-splashscreen" }
+
+# Testing
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-framework = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

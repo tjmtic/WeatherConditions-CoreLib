@@ -1,6 +1,6 @@
 package com.abyxcz.weatherconditions.core.presenter
 
-import com.abyxcz.viewpoint.location.Coordinate
+import com.abyxcz.weatherconditions.core.domain.model.Coordinate
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilitySettings
 import com.abyxcz.weatherconditions.core.domain.model.Venue
 import com.abyxcz.weatherconditions.core.domain.model.WeatherPeriod

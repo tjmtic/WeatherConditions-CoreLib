@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+
 package com.abyxcz.weatherconditions.core.presenter
 
 import com.abyxcz.weatherconditions.core.domain.model.PlayabilityProfile
@@ -7,11 +9,13 @@ import com.abyxcz.weatherconditions.core.domain.model.WeatherPeriod
 import com.abyxcz.weatherconditions.core.domain.usecase.PlayabilityCalculator
 import com.abyxcz.weatherconditions.core.ports.outbound.*
 import com.abyxcz.weatherconditions.core.util.ClockHelper
-import com.abyxcz.viewpoint.location.Coordinate
+import com.abyxcz.weatherconditions.core.domain.model.Coordinate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -25,7 +29,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class VenuePresenterTest {
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
