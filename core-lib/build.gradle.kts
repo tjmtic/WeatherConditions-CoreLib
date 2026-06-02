@@ -74,7 +74,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/abyxcz/WeatherConditions-CoreLib")
+            url = uri("https://maven.pkg.github.com/tjmtic/WeatherConditions-CoreLib")
             credentials {
                 username = System.getenv("GITHUB_ACTOR") ?: "USER_NOT_SET"
                 password = System.getenv("GITHUB_TOKEN") ?: "TOKEN_NOT_SET"
