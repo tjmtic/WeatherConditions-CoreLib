@@ -25,3 +25,78 @@ replay_pid*
 
 # Kotlin Gradle plugin data, see https://kotlinlang.org/docs/whatsnew20.html#new-directory-for-kotlin-data-in-gradle-projects
 .kotlin/
+
+# MacOS
+.DS_Store
+
+# Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Kotlin
+.kotlin
+kotlin-js-store/
+
+# IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+# Android
+local.properties
+*.log
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
+.lint/
+*.jks
+
+# iOS
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/xcschemes/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserstate
+xcuserdata/
+Pods/
+DerivedData/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# GitNexus
+.gitnexus
+
+# Antigravity/Claude
+.claude/
+
+# Temporary / Scratch files
+build_*.txt
+core_build_log*.txt
+app_errors*.txt
+app_errors*.log
+core_errors*.log
+full_location_errors.log
+location_errors.log
+release_base64.txt
+composeApp_dependencies.txt
+mempalace.yaml
+update_xcode_script.rb
+google-play-key.json
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
