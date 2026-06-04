@@ -4,6 +4,7 @@ import com.abyxcz.weatherconditions.core.domain.model.ProfileBook
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path
+import okio.Path.Companion.toPath
 
 /**
  * Multiplatform [ProfileBookStore] backed by an okio file — usable from Android, iOS, watchOS,
@@ -27,7 +28,12 @@ class OkioProfileBookStore(
     }
 
     override suspend fun write(book: ProfileBook) {
-        path.parent?.let { fileSystem.createDirectories(it) }
-        fileSystem.write(path) { writeUtf8(json.encodeToString(ProfileBook.serializer(), book)) }
+        val parent = path.parent
+        parent?.let { fileSystem.createDirectories(it) }
+        // Write to a temp sibling then atomically move, so a reader (e.g. the MCP server)
+        // never observes a half-written file.
+        val tmp = (parent ?: ".".toPath()) / "${path.name}.tmp"
+        fileSystem.write(tmp) { writeUtf8(json.encodeToString(ProfileBook.serializer(), book)) }
+        fileSystem.atomicMove(tmp, path)
     }
 }

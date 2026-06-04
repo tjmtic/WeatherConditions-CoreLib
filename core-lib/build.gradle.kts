@@ -29,6 +29,11 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // macOS targets so the native BLE sync-bridge (desktop) can reuse the scoring models
+    // and ProfileSync/ProfileBook reconciliation. Pure commonMain, no extra source needed.
+    macosArm64()
+    macosX64()
+
     // Add watchos targets if needed to match main app
     watchosArm32()
     watchosArm64()
