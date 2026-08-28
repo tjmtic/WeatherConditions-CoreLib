@@ -1,24 +1,52 @@
 name: Publish Core Library
 
+# Standard tag-driven publish (shared pattern across the WeatherConditions libs):
+#   push a tag vX.Y.Z  ->  publishes com.abyxcz.weatherconditions.core:core-lib:X.Y.Z
+#   or run manually via workflow_dispatch with an explicit version.
+# Version flows in through -PlibVersion; build.gradle.kts falls back to its default when unset.
+
 on:
-  release:
-    types: [created]
+  push:
+    tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 1.1.0). Blank = build.gradle default.'
+        required: false
+        default: ''
 
 permissions:
-  packages: write
   contents: read
+  packages: write
 
 jobs:
   publish:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Publish to GitHub Packages
-        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository
+        run: |
+          if [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION=""
+          fi
+          ARGS=""
+          [[ -n "$VERSION" ]] && ARGS="-PlibVersion=$VERSION"
+          echo "Publishing version: ${VERSION:-<build.gradle default>}"
+          ./gradlew publishAllPublicationsToGitHubPackagesRepository $ARGS
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
