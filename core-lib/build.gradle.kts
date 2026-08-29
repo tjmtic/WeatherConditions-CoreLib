@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.abyxcz.weatherconditions.core"
-version = "1.0.0"
+version = "1.1.0"
 
 kotlin {
     androidTarget {
@@ -15,10 +15,24 @@ kotlin {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         }
     }
-    
+
+    // Pure-JVM target so non-Android JVM consumers (e.g. the Playability MCP server)
+    // can link the scoring engine directly. The library is 100% commonMain with no
+    // expect/actual, so this target needs no additional source code.
+    jvm {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
+    }
+
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    // macOS targets so the native BLE sync-bridge (desktop) can reuse the scoring models
+    // and ProfileSync/ProfileBook reconciliation. Pure commonMain, no extra source needed.
+    macosArm64()
+    macosX64()
 
     // Add watchos targets if needed to match main app
     watchosArm32()
@@ -30,6 +44,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
+            api(libs.okio)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
