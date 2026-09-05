@@ -1,5 +1,8 @@
 [versions]
-agp = "8.11.2"
+# Keep in lockstep with the consuming app: Gradle refuses two AGP versions in one
+# build, so an app on 8.13.2 that includeBuilds this repo fails to configure
+# ("Using multiple versions of the Android Gradle plugin is not allowed").
+agp = "8.13.2"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
