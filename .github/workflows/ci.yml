@@ -1,0 +1,76 @@
+name: CI
+
+# Verification gate for core-lib. This library holds the domain/business logic that the
+# apps consume as a published artifact, so a regression here ships silently to every
+# consumer — but until now nothing ran its tests: the repo's only workflow was the
+# publisher. This runs the shared suite on every PR and on main.
+#
+# Runners are ubuntu-only on purpose: macOS bills at a 10x minute multiplier. The
+# Kotlin/Native test job below is paused for the same reason (see `if: false`).
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Shared + JVM Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # commonTest runs here via the jvm target: PlayabilityCalculator, DogWalkingScorer,
+      # VenuePresenter and the ProfileSync protocol/manager suites.
+      - name: JVM tests (commonTest + jvmTest)
+        run: ./gradlew :core-lib:jvmTest
+
+      - name: Android unit tests
+        run: ./gradlew :core-lib:testDebugUnitTest
+
+      # NB: no `assemble` step here. ubuntu can't build the Apple targets (KMP skips them
+      # off-Mac), so it would only re-cover what the two test tasks already compile. The
+      # Apple/Native compile gate belongs in verify-native below.
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-lib-test-reports
+          path: core-lib/build/reports/tests/**
+          if-no-files-found: warn
+
+  # ----------------------------------------------------
+  # Kotlin/Native shared-test gate. PAUSED: macOS-only (10x minutes) and there's no iOS
+  # store path yet. commonTest is compiled by a different backend for Native, so this
+  # catches breakage the JVM run cannot — re-enable (delete `if: false`) when iOS ships.
+  # ----------------------------------------------------
+  verify-native:
+    name: Shared Tests on Kotlin/Native
+    if: false
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - run: chmod +x gradlew
+      - name: iOS simulator tests (Kotlin/Native)
+        run: ./gradlew :core-lib:iosSimulatorArm64Test
