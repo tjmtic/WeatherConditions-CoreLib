@@ -1,5 +1,5 @@
 package com.abyxcz.weatherconditions.core.ports.outbound
 
 interface Clock {
-    fun now(): kotlinx.datetime.Instant
+    fun now(): kotlin.time.Instant
 }

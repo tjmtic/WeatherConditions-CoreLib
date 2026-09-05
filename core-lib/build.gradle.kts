@@ -7,7 +7,10 @@ plugins {
 
 group = "com.abyxcz.weatherconditions.core"
 // Tag-driven: CI passes -PlibVersion from the vX.Y.Z tag; default is the current release.
-version = (project.findProperty("libVersion") as String?) ?: "1.1.0"
+// 2.0.0: BREAKING. Kotlin 2.3.x / kotlinx-datetime 0.7.x moved Instant to kotlin.time,
+// changing the bytecode return type of Clock.now()/ClockHelper.now(). Consumers built
+// against 1.x get NoSuchMethodError at runtime and must recompile. See cl-08i.
+version = (project.findProperty("libVersion") as String?) ?: "2.0.0"
 
 kotlin {
     androidTarget {

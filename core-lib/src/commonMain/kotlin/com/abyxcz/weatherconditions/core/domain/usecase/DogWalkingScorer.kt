@@ -4,7 +4,7 @@ import com.abyxcz.weatherconditions.core.domain.model.ActivityScore
 import com.abyxcz.weatherconditions.core.domain.model.ScoreFactor
 import com.abyxcz.weatherconditions.core.domain.model.ScoringContext
 import com.abyxcz.weatherconditions.core.domain.model.WeatherPeriod
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.time.Duration.Companion.hours
 
 /**
