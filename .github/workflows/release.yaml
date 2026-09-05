@@ -46,6 +46,11 @@ jobs:
           ARGS=""
           [[ -n "$VERSION" ]] && ARGS="-PlibVersion=$VERSION"
           echo "Publishing version: ${VERSION:-<build.gradle default>}"
+          # Compile-gate: build + jar every publication locally FIRST. GitHub Packages
+          # versions are immutable, so a compile failure partway through a direct publish
+          # leaves some target artifacts uploaded and permanently 409s the version.
+          # core-lib publishes 11 targets, so the exposure here is large.
+          ./gradlew publishToMavenLocal $ARGS
           ./gradlew publishAllPublicationsToGitHubPackagesRepository $ARGS
         env:
           GITHUB_ACTOR: ${{ github.actor }}
