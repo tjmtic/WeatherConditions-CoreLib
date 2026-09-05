@@ -342,6 +342,6 @@ class FakeReverseGeocodingService : ReverseGeocodingService {
 }
 
 class FakeClock : Clock {
-    var currentTime = kotlinx.datetime.Instant.fromEpochMilliseconds(0)
-    override fun now(): kotlinx.datetime.Instant = currentTime
+    var currentTime = kotlin.time.Instant.fromEpochMilliseconds(0)
+    override fun now(): kotlin.time.Instant = currentTime
 }
